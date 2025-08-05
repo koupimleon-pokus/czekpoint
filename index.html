@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Czekpoint</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f3f7f4;
+      color: #333;
+    }
+    header {
+      background: #2e7d32;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #256029;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+    .logo {
+      height: 30px;
+      margin-right: 0.5rem;
+    }
+    .menu-icon {
+      font-size: 1.4rem;
+    }
+    .nav-tabs {
+      display: flex;
+      justify-content: space-around;
+      background: #e8f5e9;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #ccc;
+    }
+    .nav-tabs a {
+      color: #2e7d32;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .feed {
+      padding: 1rem;
+      margin-bottom: 60px;
+    }
+    .post {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .post img {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+    }
+    .post .meta {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.4rem;
+    }
+    .post .description {
+      font-style: italic;
+      color: #444;
+      margin-top: 0.5rem;
+    }
+    .post .riddle {
+      background: #eef6ec;
+      padding: 0.5rem;
+      border-left: 4px solid #2e7d32;
+      margin-top: 0.5rem;
+      font-style: italic;
+      color: #2e7d32;
+    }
+    .type-label {
+      display: inline-block;
+      background: #c8e6c9;
+      color: #256029;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 6px;
+      margin-top: 0.3rem;
+    }
+    .leaflet-map {
+      height: 250px;
+      border-radius: 12px;
+      margin-top: 1rem;
+    }
+    .footer-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background: white;
+      border-top: 1px solid #ddd;
+      padding: 0.5rem 0;
+      z-index: 1000;
+    }
+    .footer-nav a {
+      text-align: center;
+      text-decoration: none;
+      color: #2e7d32;
+      font-size: 0.85rem;
+    }
+    .footer-nav i {
+      font-size: 1.4rem;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="Pohodová cesta s technologií a přírodou.png" alt="Czekpoint logo" class="logo">
+      <h1>Czekpoint</h1>
+    </div>
+    <i class="fas fa-bars menu-icon"></i>
+  </header>
+
+  <div class="nav-tabs">
+    <a href="#">🔘 Prozkoumat</a>
+    <a href="hlaseni.html">🛤️ Hlášení</a>
+    <a href="pridat.html">➕ Přidat</a>
+    <a href="kodex.html">📜 Kodex</a>
+    <a href="vybava.html">🎒 Výbava</a>
+    <a href="sos.html">🚨 S.O.S</a>
+    <a href="pocasi.html">🌦️ Počasí</a>
+  </div>
+
+  <div class="feed" id="feed"></div>
+
+  <nav class="footer-nav">
+    <a href="#"><i class="fas fa-home"></i>Domů</a>
+    <a href="pridat.html"><i class="fas fa-plus-circle"></i>Přidat</a>
+    <a href="mapa.html"><i class="fas fa-map"></i>Mapa</a>
+    <a href="profil.html"><i class="fas fa-user"></i>Profil</a>
+  </nav>
+
+  <script>
+    const places = [
+      { name: "Třemšín", coords: [49.6155, 13.7913], user: "🧍‍♀️ Jana", time: "právě teď", type: "Výhled / hádanka", desc: "Vrcholová část s rozhlednou, výborné místo k odpočinku.", riddle: "Kde větry mluví a stromy šeptají, tam výhled dýchá.", img: "https://source.unsplash.com/featured/?forest,mountain", likes: 14, comments: 3 },
+      { name: "Skalka", coords: [49.6167, 13.8041], user: "🧍 Tomáš", time: "5 minut zpět", type: "Základní místo", desc: "Tiché místo pod skalním převisem, ideální k zastavení.", riddle: null, img: "https://source.unsplash.com/featured/?rock,forest", likes: 7, comments: 1 }
+    ];
+
+    function createPost(place) {
+      return `
+      <div class="post">
+        <div class="meta">${place.user} navštívil checkpoint <strong>${place.name}</strong> • ${place.time}</div>
+        <span class="type-label">${place.type}</span>
+        <div class="description">${place.desc}</div>
+        ${place.riddle ? `<div class="riddle">„${place.riddle}“</div>` : ''}
+        <img src="${place.img}" alt="foto">
+        <div class="leaflet-map" data-lat="${place.coords[0]}" data-lng="${place.coords[1]}"></div>
+        <div>❤️ ${place.likes} &nbsp; 💬 ${place.comments}</div>
+      </div>`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const feed = document.getElementById('feed');
+      feed.innerHTML = places.map(p => createPost(p)).join('');
+
+      document.querySelectorAll('.leaflet-map').forEach((el) => {
+        const lat = el.dataset.lat;
+        const lng = el.dataset.lng;
+        const map = L.map(el, { scrollWheelZoom: false, zoomControl: false }).setView([lat, lng], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap přispěvatelé'
+        }).addTo(map);
+        L.marker([lat, lng]).addTo(map);
+      });
+    });
+  </script>
+</body>
+</html>
