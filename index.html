@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -37,12 +36,14 @@
     }
     .nav-tabs {
       display: flex;
-      justify-content: space-around;
+      overflow-x: auto;
       background: #e8f5e9;
       padding: 0.6rem 0;
       border-bottom: 1px solid #ccc;
     }
     .nav-tabs a {
+      flex: 1;
+      text-align: center;
       color: #2e7d32;
       text-decoration: none;
       font-size: 0.9rem;
@@ -121,7 +122,7 @@
 <body>
   <header>
     <div style="display:flex; align-items:center;">
-      <img src="Pohodová cesta s technologií a přírodou.png" alt="Czekpoint logo" class="logo">
+      <img src="Pohodov%C3%A1%20cesta%20s%20technologi%C3%AD%20a%20p%C5%99%C3%ADrodou.png" alt="Czekpoint logo" class="logo">
       <h1>Czekpoint</h1>
     </div>
     <i class="fas fa-bars menu-icon"></i>
@@ -147,23 +148,6 @@
   </nav>
 
   <script>
-    const saved = JSON.parse(localStorage.getItem('czekpoints')) || [];
-const places = [...saved, 
-  {
-    name: "Třemšín",
-    coords: [49.6155, 13.7913],
-    user: "🧍‍♀️ Jana",
-    time: "právě teď",
-    type: "Výhled / hádanka",
-    desc: "Vrcholová část s rozhlednou.",
-    riddle: "Kde větry mluví...",
-    img: "https://source.unsplash.com/featured/?forest,mountain",
-    likes: 14,
-    comments: 3
-  },
-  ...
-];
-
     const places = [
       { name: "Třemšín", coords: [49.6155, 13.7913], user: "🧍‍♀️ Jana", time: "právě teď", type: "Výhled / hádanka", desc: "Vrcholová část s rozhlednou, výborné místo k odpočinku.", riddle: "Kde větry mluví a stromy šeptají, tam výhled dýchá.", img: "https://source.unsplash.com/featured/?forest,mountain", likes: 14, comments: 3 },
       { name: "Skalka", coords: [49.6167, 13.8041], user: "🧍 Tomáš", time: "5 minut zpět", type: "Základní místo", desc: "Tiché místo pod skalním převisem, ideální k zastavení.", riddle: null, img: "https://source.unsplash.com/featured/?rock,forest", likes: 7, comments: 1 }
