@@ -1,0 +1,33 @@
+<!DOCTYPE html><html lang="cs"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Czekpoint – Mapa</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>.map-full{height:calc(100vh - 140px);}</style>
+</head><body>
+<header><div class="brand"><img class="logo" src="../Pohodová%20cesta%20s%20technologií%20a%20přírodou.png"><h1>Mapa</h1></div><i class="fa-solid fa-map"></i></header>
+<main class="container" style="padding:0 0 4.5rem;">
+  <div id="map" class="map-full"></div>
+</main>
+<footer class="nav">
+  <a href="index.html"><i class="fa-solid fa-home"></i>Domů</a>
+  <a href="pridat.html"><i class="fa-solid fa-plus-circle"></i>Přidat</a>
+  <a href="mapa.html"><i class="fa-solid fa-map"></i>Mapa</a>
+  <a href="profil.html"><i class="fa-solid fa-user"></i>Profil</a>
+</footer>
+<script type="module">
+import {store} from './script.js'
+import {defaultPlaces} from './data.js'
+const places = [...store.get('czekpoints',[]), ...defaultPlaces]
+const center = places[0]?.coords || [49.6400,13.7900]
+const map = L.map('map').setView(center, 12)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(map)
+places.forEach(p=>{
+  const m = L.marker(p.coords).addTo(map)
+  m.bindPopup(`<b>${p.name}</b><br><small>${p.type}</small><br>${p.desc}<br>
+    <a href="index.html" style="color:#2e7d32;">Otevřít ve feedu</a>`)
+})
+</script>
+</body></html>
