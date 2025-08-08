@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="cs"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Czekpoint</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="style.css">
+</head><body>
+<header>
+  <div class="brand"><img class="logo" src="../Pohodová%20cesta%20s%20technologií%20a%20přírodou.png" alt=""><h1>Czekpoint</h1></div>
+  <i class="fa-solid fa-bars"></i>
+</header>
+
+<nav class="nav-tabs">
+  <a href="index.html">🔘 Prozkoumat</a>
+  <a href="hlaseni.html">🛤️ Hlášení</a>
+  <a href="pridat.html">➕ Přidat</a>
+  <a href="kodex.html">📜 Kodex</a>
+  <a href="vybava.html">🎒 Výbava</a>
+  <a href="sos.html">🚨 S.O.S</a>
+  <a href="pocasi.html">🌦️ Počasí</a>
+</nav>
+
+<main class="container">
+  <section id="feed"></section>
+</main>
+
+<footer class="nav">
+  <a href="index.html"><i class="fa-solid fa-home"></i>Domů</a>
+  <a href="pridat.html"><i class="fa-solid fa-plus-circle"></i>Přidat</a>
+  <a href="mapa.html"><i class="fa-solid fa-map"></i>Mapa</a>
+  <a href="profil.html"><i class="fa-solid fa-user"></i>Profil</a>
+</footer>
+
+<script type="module">
+import {qs,qsa,store,navActivate} from './script.js'
+import {defaultPlaces} from './data.js'
+
+const saved = store.get('czekpoints', [])
+const places = [...saved, ...defaultPlaces]
+const feed = qs('#feed')
+
+function card(p){
+  return `<article class="card">
+    <div class="meta">🧍 ${p.user} • <strong>${p.name}</strong> • ${p.time}</div>
+    <span class="badge">${p.type}</span>
+    <p class="small">${p.desc}</p>
+    <img class="media" src="${p.img}" alt="${p.name}" loading="lazy">
+    <div class="map" data-lat="${p.coords[0]}" data-lng="${p.coords[1]}"></div>
+    <div class="meta">❤️ ${p.likes||0} &nbsp; 💬 ${p.comments||0}</div>
+  </article>`
+}
+feed.innerHTML = places.map(card).join('')
+qsa('.map').forEach(el=>{
+  const lat=+el.dataset.lat, lng=+el.dataset.lng
+  const map=L.map(el,{scrollWheelZoom:false,zoomControl:false}).setView([lat,lng],13)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(map)
+  L.marker([lat,lng]).addTo(map)
+})
+navActivate()
+</script>
+</body></html>
