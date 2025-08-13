@@ -1,104 +1,37 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Czekpoint Mapa</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Czekpoint – Mapa</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f3f7f4;
-      color: #333;
-    }
-    header {
-      background: #2e7d32;
-      color: white;
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #256029;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.4rem;
-    }
-    .logo {
-      height: 30px;
-      margin-right: 0.5rem;
-    }
-    .map-container {
-      height: calc(100vh - 130px);
-      width: 100%;
-    }
-    .footer-nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      background: white;
-      border-top: 1px solid #ddd;
-      padding: 0.5rem 0;
-      z-index: 1000;
-    }
-    .footer-nav a {
-      text-align: center;
-      text-decoration: none;
-      color: #2e7d32;
-      font-size: 0.85rem;
-    }
-    .footer-nav i {
-      font-size: 1.4rem;
-      display: block;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <style>.map-full{height:calc(100vh - 140px);}</style>
 </head>
 <body>
-  <header>
-    <div style="display:flex; align-items:center;">
-      <img src="Pohodov%C3%A1%20cesta%20s%20technologi%C3%AD%20a%20p%C5%99%C3%ADrodou.png" alt="Czekpoint logo" class="logo">
-      <h1>Czekpoint</h1>
-    </div>
-    <i class="fas fa-map"></i>
-  </header>
-
-  <div class="map-container" id="map"></div>
-
-  <nav class="footer-nav">
-    <a href="index.html"><i class="fas fa-home"></i>Domů</a>
-    <a href="pridat.html"><i class="fas fa-plus-circle"></i>Přidat</a>
-    <a href="mapa.html"><i class="fas fa-map"></i>Mapa</a>
-    <a href="profil.html"><i class="fas fa-user"></i>Profil</a>
-  </nav>
-
-  <script>
-    const places = [
-      { name: "Zámek Rožmitál", lat: 49.6460, lng: 13.8020, type: "🕍 Zámek", desc: "Renesanční zámek s muzeem a zahradou." },
-      { name: "Mohyla J. J. Ryby", lat: 49.5871, lng: 13.8384, type: "🎶 Památník", desc: "Pamětní místo skladatele." },
-      { name: "Třemšín", lat: 49.6415, lng: 13.7548, type: "🏞️ Vrchol", desc: "Vyhlídkové místo s rozhlednou." },
-      { name: "Naučná stezka", lat: 49.6440, lng: 13.8035, type: "📚 Stezka", desc: "Trasa s informačními tabulemi." },
-      { name: "Kostel sv. Petra a Pavla", lat: 49.6470, lng: 13.8040, type: "⛪ Kostel", desc: "Barokní architektura." },
-      { name: "Kamenný most", lat: 49.6452, lng: 13.8073, type: "🌉 Most", desc: "Historický most přes říčku." },
-      { name: "Vyhlídka Na Bučince", lat: 49.6380, lng: 13.7830, type: "🔭 Vyhlídka", desc: "Výhled na krajinu." },
-      { name: "Rybník Velký", lat: 49.6435, lng: 13.7950, type: "🐦 Příroda", desc: "Relax u vody a pozorování ptáků." },
-      { name: "Lesní cesta", lat: 49.6400, lng: 13.7900, type: "🌲 Cesta", desc: "Vhodná pro rodiny s kočárky." },
-      { name: "Zřícenina Kamýk", lat: 49.6325, lng: 13.7600, type: "🏰 Zřícenina", desc: "Historická ruina s výhledem." }
-    ];
-
-    const map = L.map('map').setView([49.6400, 13.7900], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap přispěvatelé'
-    }).addTo(map);
-
-    places.forEach(place => {
-      const marker = L.marker([place.lat, place.lng]).addTo(map);
-      marker.bindPopup(`<b>${place.name}</b><br>${place.type}<br><small>${place.desc}</small>`);
-    });
-  </script>
+<header><div class="brand"><img class="logo" src="logo.png"><h1>Mapa</h1></div><i class="fa-solid fa-map"></i></header>
+<main class="container" style="padding:0 0 4.5rem;">
+  <div id="map" class="map-full"></div>
+</main>
+<footer class="nav">
+  <a href="index.html"><i class="fa-solid fa-home"></i>Domů</a>
+  <a href="pridat.html"><i class="fa-solid fa-plus-circle"></i>Přidat</a>
+  <a href="mapa.html"><i class="fa-solid fa-map"></i>Mapa</a>
+  <a href="profil.html"><i class="fa-solid fa-user"></i>Profil</a>
+</footer>
+<script type="module">
+import {store} from './script.js'
+import {defaultPlaces} from './data.js'
+const places = [...store.get('czekpoints',[]), ...defaultPlaces]
+const center = places[0]?.coords || [49.6400,13.7900]
+const map = L.map('map').setView(center, 12)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(map)
+places.forEach(p=>{
+  const m = L.marker(p.coords).addTo(map)
+  m.bindPopup(`<b>${p.name}</b><br><small>${p.type}</small><br>${p.desc}<br>
+    <a href="index.html" style="color:#2e7d32;">Otevřít ve feedu</a>`)
+})
+</script>
 </body>
 </html>
