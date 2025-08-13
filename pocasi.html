@@ -1,10 +1,44 @@
-
 <!DOCTYPE html>
 <html lang="cs">
-<head><meta charset="UTF-8"><title>Počasí</title></head>
-<body><h1>🌦️ Počasí</h1>
-<p>Počasí se bude zobrazovat automaticky dle GPS bodu v budoucí verzi.</p>
-<p>Zatím sledujte <a href="https://www.chmi.cz">www.chmi.cz</a> nebo <a href="https://www.yr.no">yr.no</a></p>
-<a href="index.html">Zpět</a>
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Počasí</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><div class="brand"><img class="logo" src="logo.png"><h1>Počasí</h1></div></header>
+<main class="container">
+  <div class="card">
+    <h2>Aktuální počasí podle polohy</h2>
+    <p class="small">Povol geolokaci v prohlížeči. Zdroj: Open-Meteo.</p>
+    <div id="weather" class="center">Načítám...</div>
+  </div>
+</main>
+<footer class="nav">
+  <a href="index.html"><i class="fa-solid fa-home"></i>Domů</a>
+  <a href="pridat.html"><i class="fa-solid fa-plus-circle"></i>Přidat</a>
+  <a href="mapa.html"><i class="fa-solid fa-map"></i>Mapa</a>
+  <a href="profil.html"><i class="fa-solid fa-user"></i>Profil</a>
+</footer>
+<script type="module">
+import {qs} from './script.js'
+const box = qs('#weather')
+function show(w){ box.innerHTML = `<b>${w.temp}°C</b> • vítr ${w.wind} m/s • ${w.summary}` }
+function codeToText(code){ const d={0:'Jasno',1:'Převážně jasno',2:'Polojasno',3:'Zataženo',
+45:'Mlha',48:'Mrznoucí mlha',51:'Mrholení slabé',53:'Mrholení',55:'Mrholení silné',
+61:'Déšť slabý',63:'Déšť',65:'Déšť silný',71:'Sněžení slabé',73:'Sněžení',75:'Sněžení silné',
+80:'Přeháňky slabé',81:'Přeháňky',82:'Přeháňky silné',95:'Bouřky'}; return d[code]||'Neznámé' }
+if(navigator.geolocation){
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    const {latitude:lat, longitude:lon} = pos.coords
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m`
+    try{
+      const r = await fetch(url); const j = await r.json()
+      show({temp:j.current.temperature_2m, wind:j.current.wind_speed_10m, summary:codeToText(j.current.weather_code)})
+    }catch(e){ box.textContent = 'Nepodařilo se načíst počasí.' }
+  }, ()=> box.textContent = 'Geolokace byla zamítnuta.' )
+}else box.textContent = 'Prohlížeč nepodporuje geolokaci.'
+</script>
 </body>
 </html>
