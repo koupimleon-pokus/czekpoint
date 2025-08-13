@@ -1,9 +1,44 @@
-
 <!DOCTYPE html>
 <html lang="cs">
-<head><meta charset="UTF-8"><title>Profil</title></head>
-<body><h1>👤 Tvůj profil</h1>
-<p>Funkce profilu bude součástí rozšíření aplikace.</p>
-<a href="index.html">Zpět</a>
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><div class="brand"><img class="logo" src="logo.png"><h1>Profil</h1></div></header>
+<main class="container">
+  <section class="card">
+    <h2>Uživatel</h2>
+    <div class="row">
+      <input id="nick" placeholder="Přezdívka">
+      <button id="save" class="primary" style="width:auto;">Uložit</button>
+    </div>
+    <p class="small">Přezdívka se zobrazí u nově přidaných bodů a hlášení.</p>
+  </section>
+  <section class="card">
+    <h2>Statistiky</h2>
+    <div id="stats" class="small">Načítám...</div>
+  </section>
+</main>
+<footer class="nav">
+  <a href="index.html"><i class="fa-solid fa-home"></i>Domů</a>
+  <a href="pridat.html"><i class="fa-solid fa-plus-circle"></i>Přidat</a>
+  <a href="mapa.html"><i class="fa-solid fa-map"></i>Mapa</a>
+  <a href="profil.html"><i class="fa-solid fa-user"></i>Profil</a>
+</footer>
+<script type="module">
+import {qs,store} from './script.js'
+const nick = qs('#nick'), save = qs('#save'), stats = qs('#stats')
+nick.value = store.get('czekNick','')
+save.onclick = ()=>{ store.set('czekNick', nick.value||''); alert('Uloženo') }
+function render(){
+  const pts = store.get('czekpoints',[]).length
+  const reps = store.get('czekReports',[]).length
+  stats.textContent = `Body přidané: ${pts} • Hlášení: ${reps}`
+}
+render()
+</script>
 </body>
 </html>
