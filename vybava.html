@@ -1,8 +1,40 @@
-
 <!DOCTYPE html>
 <html lang="cs">
-<head><meta charset="UTF-8"><title>Výbava na cesty</title></head>
-<body><h1>🎒 Co si vzít s sebou</h1><ul>
-<li>Pevné boty</li><li>Pláštěnku</li><li>Mapu nebo GPS</li><li>Dostatek vody</li><li>Svačinu</li><li>Lékárničku</li>
-</ul><a href="index.html">Zpět</a></body>
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Výbava</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><div class="brand"><img class="logo" src="logo.png"><h1>Co si vzít s sebou</h1></div></header>
+<main class="container">
+  <section class="card checklist" id="list">
+    <h2>Základní výbava</h2>
+  </section>
+</main>
+<footer class="nav">
+  <a href="index.html"><i class="fa-solid fa-home"></i>Domů</a>
+  <a href="pridat.html"><i class="fa-solid fa-plus-circle"></i>Přidat</a>
+  <a href="mapa.html"><i class="fa-solid fa-map"></i>Mapa</a>
+  <a href="profil.html"><i class="fa-solid fa-user"></i>Profil</a>
+</footer>
+<script type="module">
+import {qs,store} from './script.js'
+const items = ['Pevné boty','Voda','Pláštěnka','Svačina','Nabité mobily / powerbanka','Mapa / GPS','Lékárnička','Hotovost']
+const checked = new Set(store.get('czekChecklist', []))
+function row(label){
+  const id = 'i'+label.replace(/\W+/g,'')
+  return `<label><input type="checkbox" data-k="${label}" ${checked.has(label)?'checked':''}> ${label}</label>`
+}
+qs('#list').insertAdjacentHTML('beforeend', items.map(row).join(''))
+document.addEventListener('change', e=>{
+  if(e.target.matches('input[type=checkbox][data-k]')){
+    const k = e.target.dataset.k
+    if(e.target.checked) checked.add(k); else checked.delete(k)
+    store.set('czekChecklist', [...checked])
+  }
+})
+</script>
+</body>
 </html>
